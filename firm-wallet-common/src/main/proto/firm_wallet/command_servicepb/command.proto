@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package firm_wallet.command_servicepb;
+
+option java_package = "firm_wallet.command_servicepb";
+option java_outer_classname = "CommandServicepb";
+option java_multiple_files = false;
+
+// Command type enum
+enum CommandType {
+    CREATE_ACCOUNT = 0;
+    DELETE_ACCOUNT = 1;
+    LOCK_ACCOUNT = 2;
+    UNLOCK_ACCOUNT = 3;
+    UPDATE_ACCOUNT_CONFIG = 4;
+    TRANSFER = 5;
+    BATCH_BALANCE_OPERATION = 6;
+    RESERVE = 7;
+    RELEASE = 8;
+}
+
+// Command message
+message Command {
+    CommandType type = 1;
+    bytes data = 2;
+}

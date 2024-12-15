@@ -1,0 +1,19 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'firm-wallet-access'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['access:8080']
+
+  - job_name: 'firm-wallet-storage'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['storage-node1:9092', 'storage-node2:9092', 'storage-node3:9092']
+
+  - job_name: 'firm-wallet-query'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['query:8081']

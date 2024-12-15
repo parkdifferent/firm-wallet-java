@@ -1,0 +1,7 @@
+syntax = "proto3";
+package firm_wallet.commonpb;
+
+message ResponseHeader {
+  string dedup_id = 1;
+  uint64 seq_num = 2;
+}

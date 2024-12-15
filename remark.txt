@@ -1,0 +1,23 @@
+如果在容器化环境（如 Docker）中运行，请确保卷或绑定挂载已正确配置：
+
+VOLUME /data/firm-wallet/rocksdb/events
+
+关于 firm-wallet-transaction 模块：
+它是一个库模块，不需要独立启动
+它被其他模块（如 firm-wallet-storage）依赖
+它提供了事务相关的功能实现
+我们按顺序启动了三个服务：
+firm-wallet-storage：存储服务
+firm-wallet-query：查询服务
+firm-wallet-access：访问服务
+
+应用程序似乎无法创建目录/data/firm-wallet/rocksdb/events。这可能是由于权限不足。以下是一些解决方案：
+
+更改权限：
+
+狂欢复制sudo mkdir -p /data/firm-wallet/rocksdb/events
+sudo chmod 777 /data/firm-wallet/rocksdb/events
+
+使用具有保证的写权限的目录：在您的application.properties或中application.yml，使用用户主目录中的路径：
+
+特性复制rocksdb.event.path=${user.home}/firm-wallet/rocksdb/events

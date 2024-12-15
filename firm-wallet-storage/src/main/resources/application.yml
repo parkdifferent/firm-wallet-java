@@ -1,0 +1,71 @@
+server:
+  port: 9092
+
+spring:
+  application:
+    name: firm-wallet-storage
+  datasource:
+    url: jdbc:mysql://localhost:3306/firm_wallet?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC
+    username: root
+    password: 111
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  type-aliases-package: com.auticuro.firmwallet.common.model
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+raft:
+  # 数据存储路径，使用绝对路径或系统变量
+  dataPath: ${user.home}/firm-wallet/raft/${spring.application.name}
+
+  # 集群组唯一标识
+  groupId: firm-wallet-cluster-${spring.application.name}
+
+  # 当前节点标识
+  serverId: localhost:10001
+
+  # 单节点配置
+  serverList: localhost:10001
+
+  # 配置超时和心跳相关参数
+  election:
+    timeout-ms: 5000  # 选举超时时间
+    heartbeat-interval-ms: 1000  # 心跳间隔
+
+  # 快照和日志配置
+  snapshot:
+    interval-seconds: 3600  # 快照间隔
+    retain-count: 3  # 保留的快照数量
+
+  # 日志配置
+  log:
+    max-size-mb: 1024  # 日志最大大小
+
+rocksdb:
+  path: ${user.home}/firm-wallet/rocksdb
+  event:
+    path: ${rocksdb.path}/events
+  max-open-files: 1000
+  write-buffer-size: 64MB
+  max-write-buffer-number: 4
+  target-file-size-base: 64MB
+
+metrics:
+  export:
+    prometheus:
+      enabled: true
+
+logging:
+  level:
+    root: INFO
+    com.alipay.sofa.jraft: DEBUG
+    com.auticuro.firmwallet: DEBUG

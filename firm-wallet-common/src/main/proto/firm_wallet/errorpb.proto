@@ -1,0 +1,25 @@
+syntax = "proto3";
+package firm_wallet.errorpb;
+
+message Error {
+  string message = 1;
+  ErrorType type = 2;
+}
+
+enum ErrorType {
+  OK = 0;
+  UNKNOWN = 1;
+  INVALID_ARGUMENT = 2;
+  ALREADY_EXISTS = 3;
+  NOT_FOUND = 4;
+  PERMISSION_DENIED = 5;
+  RESOURCE_EXHAUSTED = 6;
+  FAILED_PRECONDITION = 7;
+  ABORTED = 8;
+  OUT_OF_RANGE = 9;
+  UNIMPLEMENTED = 10;
+  INTERNAL = 11;
+  UNAVAILABLE = 12;
+  DATA_LOSS = 13;
+  UNAUTHENTICATED = 14;
+}

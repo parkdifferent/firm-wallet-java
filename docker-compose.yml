@@ -1,0 +1,105 @@
+version: '3.8'
+
+services:
+  access:
+    build: .
+    environment:
+      - SERVICE_TYPE=access
+      - SPRING_PROFILES_ACTIVE=prod
+      - STORAGE_SERVICE_URL=storage:9092
+    ports:
+      - "8080:8080"
+      - "9090:9090"
+    depends_on:
+      - storage
+      - mysql
+
+  storage-node1:
+    build: .
+    environment:
+      - SERVICE_TYPE=storage
+      - SPRING_PROFILES_ACTIVE=prod
+      - RAFT_NODE_ID=node1
+      - RAFT_CLUSTER_NODES=storage-node1:10001,storage-node2:10001,storage-node3:10001
+    volumes:
+      - storage-data1:/data/firm-wallet
+    ports:
+      - "9092:9092"
+      - "10001:10001"
+
+  storage-node2:
+    build: .
+    environment:
+      - SERVICE_TYPE=storage
+      - SPRING_PROFILES_ACTIVE=prod
+      - RAFT_NODE_ID=node2
+      - RAFT_CLUSTER_NODES=storage-node1:10001,storage-node2:10001,storage-node3:10001
+    volumes:
+      - storage-data2:/data/firm-wallet
+    ports:
+      - "9093:9092"
+      - "10002:10001"
+
+  storage-node3:
+    build: .
+    environment:
+      - SERVICE_TYPE=storage
+      - SPRING_PROFILES_ACTIVE=prod
+      - RAFT_NODE_ID=node3
+      - RAFT_CLUSTER_NODES=storage-node1:10001,storage-node2:10001,storage-node3:10001
+    volumes:
+      - storage-data3:/data/firm-wallet
+    ports:
+      - "9094:9092"
+      - "10003:10001"
+
+  query:
+    build: .
+    environment:
+      - SERVICE_TYPE=query
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/firm_wallet?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - STORAGE_SERVICE_URL=storage:9092
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mysql
+      - storage
+
+  mysql:
+    image: mysql:8.0
+    environment:
+      - MYSQL_DATABASE=firm_wallet
+      - MYSQL_ROOT_PASSWORD=root
+    volumes:
+      - mysql-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    ports:
+      - "9091:9090"
+
+  grafana:
+    image: grafana/grafana
+    volumes:
+      - grafana-data:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+
+volumes:
+  storage-data1:
+  storage-data2:
+  storage-data3:
+  mysql-data:
+  prometheus-data:
+  grafana-data:

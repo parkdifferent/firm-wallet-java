@@ -1,0 +1,38 @@
+syntax = "proto3";
+package firm_wallet.accountpb;
+
+enum AccountState {
+  ACTIVE = 0;
+  LOCKED = 1;
+  DELETED = 2;
+}
+
+enum AssetClass {
+  UNKNOWN = 0;
+  FIAT = 1;
+  CRYPTO = 2;
+}
+
+message Account {
+  string account_id = 1;
+  AccountState state = 2;
+  AccountConfig config = 3;
+  Balance balance = 4;
+}
+
+message AccountConfig {
+  AssetClass asset_class = 1;
+  BalanceLimit balance_limit = 2;
+}
+
+message BalanceLimit {
+  string min_available = 1;
+  string max_available = 2;
+  string max_reserved = 3;
+}
+
+message Balance {
+  string available = 1;
+  string reserved = 2;
+  map<string, string> reservations = 3;
+}

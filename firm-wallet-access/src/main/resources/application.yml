@@ -1,0 +1,23 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: firm-wallet-access
+
+grpc:
+  server:
+    port: 9090
+
+transaction:
+  service:
+    url: localhost:9091
+
+storage:
+  service:
+    url: localhost:9092
+
+metrics:
+  enabled: true
+  prometheus:
+    enabled: true
