@@ -1,0 +1,48 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  application:
+    name: firm-wallet-test
+
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=MySQL
+    username: sa
+    password: 
+
+  sql:
+    init:
+      schema-locations: classpath:schema-h2.sql
+      mode: always
+
+rocksdb:
+  event:
+    path: ${java.io.tmpdir}/rocksdb-test-${random.uuid}/events
+  path: ${java.io.tmpdir}/rocksdb-test-${random.uuid}
+
+raft:
+  dataPath: ${java.io.tmpdir}/raft-test-${random.uuid}
+  groupId: firm-wallet-cluster-test
+  serverId: localhost:10001
+  serverList: localhost:10001
+  election:
+    timeout-ms: 5000
+    heartbeat-interval-ms: 1000
+  snapshot:
+    interval-seconds: 3600
+    retain-count: 3
+  log:
+    max-size-mb: 1024
+
+mybatis:
+  mapper-locations: classpath*:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+
+grpc:
+  server:
+    port: 0  # Use random port
+  client:
+    storage:
+      address: localhost:${grpc.server.port}
+      negotiationType: PLAINTEXT

@@ -82,3 +82,10 @@ yarn-error.log*
 *.csr
 secret.*
 secrets.*
+
+LOG*
+OPTIONS*
+MANIFEST*
+LOCK*
+CURRENT*
+IDENTITY*

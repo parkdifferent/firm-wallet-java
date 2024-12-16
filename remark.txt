@@ -15,9 +15,31 @@ firm-wallet-access：访问服务
 
 更改权限：
 
-狂欢复制sudo mkdir -p /data/firm-wallet/rocksdb/events
+复制sudo mkdir -p /data/firm-wallet/rocksdb/events
 sudo chmod 777 /data/firm-wallet/rocksdb/events
 
 使用具有保证的写权限的目录：在您的application.properties或中application.yml，使用用户主目录中的路径：
 
-特性复制rocksdb.event.path=${user.home}/firm-wallet/rocksdb/events
+复制rocksdb.event.path=${user.home}/firm-wallet/rocksdb/events
+
+
+总结一下现有的架构实现:
+
+Command Side (firm-wallet-access):
+- AccountManagementGateway
+- BalanceOperationGateway
+- TransactionGateway
+- InternalGateway
+Storage Layer (firm-wallet-storage):
+- RocksDBStore - 基础存储功能
+- RocksDBEventStore - 事件存储
+- EventStore 接口定义
+Transaction Layer (firm-wallet-transaction):
+- MessageBroker - 消息处理
+- SagaCoordinator - 事务协调
+- CommandHandler - 命令处理
+Query Side (firm-wallet-query):
+- QueryService - 查询服务
+- EventProcessor - 事件处理
+- Repository 实现
+这样的架构完全符合文档中描述的 CQRS 模式和事件溯源设计。

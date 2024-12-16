@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: firm-wallet-test
+  profiles:
+    active: test
+
+server:
+  port: 8080
+
+grpc:
+  server:
+    port: 9090
